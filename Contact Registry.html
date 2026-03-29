@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Contact Registry</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #000;
+    --panel: #0b0b0b;
+    --panel-soft: #101010;
+    --border: #232323;
+    --border-strong: #3d3d3d;
+    --text: #fff;
+    --text-soft: #cfcfcf;
+    --text-dim: #8d8d8d;
+    --text-faint: #666;
+    --shadow: rgba(0, 0, 0, 0.45);
+  }
+
+  body {
+    background: var(--bg);
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text);
+  }
+
+  .header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.04em;
+  }
+
+  .header p {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .editable-company {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .editable-company:hover { color: var(--text); }
+
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  .stat-pill span {
+    color: var(--text);
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 0;
+    min-height: calc(100vh - 80px);
+  }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .form-panel {
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .list-panel {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+  }
+
+  .input-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .input-group label {
+    font-size: 11px;
+    color: var(--text-soft);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .styled-input {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    padding: 10px 12px;
+    width: 100%;
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+  }
+
+  .styled-input:focus {
+    border-color: var(--border-strong);
+    background: #121212;
+  }
+
+  .styled-input::placeholder { color: var(--text-faint); }
+
+  textarea.styled-input {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+
+  .save-btn {
+    background: linear-gradient(135deg, #f5f5f5 0%, #8f8f8f 100%);
+    border: none;
+    border-radius: 4px;
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 12px;
+    width: 100%;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .save-btn:hover { opacity: 0.9; }
+  .save-btn:active { transform: scale(0.98); }
+
+  .trust-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .trust-opt {
+    padding: 8px 4px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+
+  .trust-opt.alto   { background: #0d2010; color: #4caf78; border-color: #1e4028; }
+  .trust-opt.medio  { background: #1e1a0a; color: #c9a84c; border-color: #3a3118; }
+  .trust-opt.bajo   { background: #200d0d; color: #e05252; border-color: #401818; }
+  .trust-opt.neutro { background: #141414; color: #888; border-color: #2a2a2a; }
+  .trust-opt.selected { outline: 2px solid #e6e6e6; outline-offset: 1px; }
+
+  .hierarchy-selector {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 12px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .hierarchy-selector.open {
+    border-color: var(--border-strong);
+    background: #121212;
+  }
+
+  .selector-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+  }
+
+  .selector-summary-main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .selector-title {
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .selector-subtitle {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .selector-chevron {
+    color: var(--text-dim);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .selector-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .selector-tag {
+    border: 1px solid var(--border);
+    background: #141414;
+    color: var(--text-soft);
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  .selector-panel {
+    display: none;
+    margin-top: 10px;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+    gap: 10px;
+  }
+
+  .hierarchy-selector.open .selector-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .selector-search {
+    width: 100%;
+    background: #050505;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    padding: 8px 10px;
+    outline: none;
+  }
+
+  .selector-search::placeholder { color: var(--text-faint); }
+  .selector-search:focus { border-color: var(--border-strong); }
+
+  .selector-actions,
+  .selector-crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .selector-action-btn {
+    background: #151515;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-soft);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 8px;
+    cursor: pointer;
+  }
+
+  .selector-action-btn:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+
+  .selector-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 240px;
+    overflow: auto;
+    padding-right: 2px;
+  }
+
+  .selector-option {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    background: #111;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    padding: 9px 10px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .selector-option:hover,
+  .selector-option.active {
+    border-color: var(--border-strong);
+    background: #171717;
+  }
+
+  .selector-option small {
+    color: var(--text-dim);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .selector-empty {
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 12px 0 4px;
+  }
+
+  .filters-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .search-wrap {
+    flex: 1;
+    min-width: 160px;
+    position: relative;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    padding: 8px 10px 8px 32px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input:focus { border-color: var(--border-strong); }
+  .search-wrap input::placeholder { color: var(--text-faint); }
+
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-faint);
+    font-size: 13px;
+    pointer-events: none;
+  }
+
+  .filter-btn {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-dim);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+
+  .filter-btn.active {
+    border-color: #f0f0f0;
+    color: #fff;
+    background: #1a1a1a;
+  }
+
+  .contacts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .contact-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+
+  .contact-card:hover { border-color: var(--border-strong); }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #171717;
+    border: 1px solid var(--border-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+
+  .card-title { flex: 1; min-width: 0; }
+
+  .contact-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .contact-meta {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .trust-badge {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .trust-alto   { background: #0d2010; color: #4caf78; border: 1px solid #1e4028; }
+  .trust-medio  { background: #1e1a0a; color: #c9a84c; border: 1px solid #3a3118; }
+  .trust-bajo   { background: #200d0d; color: #e05252; border: 1px solid #401818; }
+  .trust-neutro { background: #141414; color: #888; border: 1px solid #2a2a2a; }
+
+  .card-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+  .card-perception {
+    font-size: 12px;
+    color: var(--text-soft);
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+
+  .card-notes {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    background: #080808;
+    border-left: 2px solid var(--border-strong);
+    padding: 6px 10px;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .card-notes-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 3px;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    gap: 12px;
+  }
+
+  .card-date {
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.06em;
+  }
+
+  .delete-btn {
+    font-size: 10px;
+    color: var(--text-faint);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    padding: 0;
+  }
+
+  .delete-btn:hover { color: #e05252; }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .empty-icon { font-size: 28px; opacity: 0.2; color: #fff; }
+  .empty-text { font-size: 12px; color: var(--text-faint); letter-spacing: 0.06em; line-height: 1.7; }
+  .note-count { font-size: 10px; color: var(--text-dim); margin-left: auto; }
+
+  .success-flash {
+    background: #0d2010;
+    border: 1px solid #1e4028;
+    color: #4caf78;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-align: center;
+    padding: 8px;
+    border-radius: 4px;
+    display: none;
+  }
+
+  .results-info {
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 0;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 20;
+  }
+
+  .modal-backdrop.visible { display: flex; }
+
+  .modal-card {
+    width: min(460px, 100%);
+    background: #0b0b0b;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 22px;
+    box-shadow: 0 20px 60px var(--shadow);
+  }
+
+  .modal-card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .modal-card p {
+    color: var(--text-dim);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .ghost-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-soft);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    padding: 10px 12px;
+    cursor: pointer;
+  }
+
+  .ghost-btn:hover { border-color: var(--border-strong); color: var(--text); }
+
+  @media (max-width: 700px) {
+    .header {
+      padding: 18px 16px 14px;
+    }
+
+    .form-panel,
+    .list-panel {
+      padding: 16px;
+    }
+
+    .trust-options {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filters-row {
+      overflow-x: auto;
+      padding-bottom: 2px;
+      flex-wrap: nowrap;
+    }
+
+    .filter-btn {
+      flex: 0 0 auto;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Contact Registry</h1>
+    <p id="company-name" class="editable-company" onclick="openCompanyModal(true)">Company name — SimCompanies</p>
+  </div>
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-pill">Total <span id="stat-total">0</span></div>
+    <div class="stat-pill">Suppliers <span id="stat-prov">0</span></div>
+    <div class="stat-pill">High trust <span id="stat-alto">0</span></div>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="form-panel">
+    <div class="section-label">New contact</div>
+
+    <div class="input-group">
+      <label>Contact name</label>
+      <input type="text" class="styled-input" id="contact-name" placeholder="Enter the company name" />
+    </div>
+
+    <div class="input-group">
+      <label>Contact type</label>
+      <select class="styled-input" id="contact-type">
+        <option value="Supplier">Supplier</option>
+        <option value="Client">Client</option>
+        <option value="Unknown">Unknown</option>
+        <option value="Ally">Ally</option>
+        <option value="Social">Social</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label>Product / Sector</label>
+      <div class="hierarchy-selector" id="hierarchy-selector">
+        <div class="selector-summary" onclick="toggleSelector()">
+          <div class="selector-summary-main">
+            <div class="selector-title" id="selector-title">Various</div>
+            <div class="selector-subtitle" id="selector-subtitle">No specific selection</div>
+          </div>
+          <div class="selector-chevron" id="selector-chevron">▼</div>
+        </div>
+        <div class="selector-tags" id="selector-tags"></div>
+        <div class="selector-panel">
+          <input
+            type="text"
+            id="selector-search"
+            class="selector-search"
+            placeholder="Search sector or product..."
+            oninput="renderSelectorOptions()"
+          />
+          <div class="selector-crumbs" id="selector-crumbs"></div>
+          <div class="selector-actions">
+            <button type="button" class="selector-action-btn" onclick="resetHierarchySelection()">Various</button>
+            <button type="button" class="selector-action-btn" id="back-to-rubros-btn" onclick="backToRubros()" style="display:none;">Add sector</button>
+            <button type="button" class="selector-action-btn" id="remove-rubro-btn" onclick="removeActiveRubro()" style="display:none;">Remove sector</button>
+          </div>
+          <div class="selector-list" id="selector-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Perception</label>
+      <textarea class="styled-input" id="perception-input" placeholder="Describe the company"></textarea>
+    </div>
+
+    <div class="input-group">
+      <label>Additional notes</label>
+      <textarea class="styled-input" id="notes-input" placeholder="Agreed prices, conditions, important details..." style="min-height:60px;"></textarea>
+    </div>
+
+    <div class="input-group">
+      <label>Trust level</label>
+      <div class="trust-options">
+        <div class="trust-opt alto" onclick="selectTrust('High', this)">High</div>
+        <div class="trust-opt medio selected" onclick="selectTrust('Medium', this)">Medium</div>
+        <div class="trust-opt bajo" onclick="selectTrust('Low', this)">Low</div>
+        <div class="trust-opt neutro" onclick="selectTrust('Neutral', this)">Neutral</div>
+      </div>
+    </div>
+
+    <button class="save-btn" onclick="saveContact()">Save contact</button>
+    <div class="success-flash" id="success-msg">Contact saved successfully</div>
+  </div>
+
+  <div class="list-panel">
+    <div class="section-label">
+      Contact archive
+      <span class="note-count" id="contact-count">0 records</span>
+    </div>
+
+    <div class="filters-row">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="search-input" placeholder="Search contact..." oninput="applyFilters()" />
+      </div>
+    </div>
+
+    <div class="filters-row" id="type-filters">
+      <button class="filter-btn active" onclick="setTypeFilter('todos', this)">All</button>
+      <button class="filter-btn" onclick="setTypeFilter('Supplier', this)">Suppliers</button>
+      <button class="filter-btn" onclick="setTypeFilter('Client', this)">Clients</button>
+      <button class="filter-btn" onclick="setTypeFilter('Unknown', this)">Unknown</button>
+      <button class="filter-btn" onclick="setTypeFilter('Ally', this)">Allies</button>
+      <button class="filter-btn" onclick="setTypeFilter('Social', this)">Social</button>
+    </div>
+
+    <div class="filters-row" id="trust-filters">
+      <button class="filter-btn active" onclick="setTrustFilter('todos', this)">All trust levels</button>
+      <button class="filter-btn" onclick="setTrustFilter('High', this)">High</button>
+      <button class="filter-btn" onclick="setTrustFilter('Medium', this)">Medium</button>
+      <button class="filter-btn" onclick="setTrustFilter('Low', this)">Low</button>
+      <button class="filter-btn" onclick="setTrustFilter('Neutral', this)">Neutral</button>
+    </div>
+
+    <div class="filters-row" id="rubro-filters"></div>
+
+    <div class="results-info" id="results-info"></div>
+    <div class="contacts-list" id="contacts-list">
+      <div class="empty-state">
+        <div class="empty-icon">◈</div>
+        <div class="empty-text">No contacts registered yet.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="company-modal">
+  <div class="modal-card">
+    <h2>Company name</h2>
+    <p>Enter the name you want to show in the header. It will be saved for future openings and can later be edited by clicking the name.</p>
+    <input type="text" class="styled-input" id="company-name-input" placeholder="Ex: Vito S.A." />
+    <div class="modal-actions">
+      <button type="button" class="ghost-btn" id="company-cancel-btn" onclick="closeCompanyModal()">Cancel</button>
+      <button type="button" class="save-btn" style="width:auto; padding:10px 14px;" onclick="saveCompanyName()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'vito-contacts-v10';
+  const COMPANY_STORAGE_KEY = 'vito-company-name-v10';
+  const DEFAULT_COMPANY_NAME = 'Company name';
+  const VARIOS = 'Various';
+  const RUBROS = {
+    'Agriculture': ['Seeds', 'Apples', 'Oranges', 'Grapes', 'Grain', 'Sugarcane', 'Cotton', 'Cows', 'Pigs', 'Coffee beans', 'Cocoa', 'Vegetables', 'Fodder'],
+    'Food': ['Dough', 'Sauce', 'Steak', 'Sausages', 'Eggs', 'Milk', 'Coffee powder', 'Flour', 'Bread', 'Apple pie', 'Orange juice', 'Apple cider', 'Ginger beer', 'Frozen pizza', 'Pasta', 'Butter', 'Cheese', 'Chocolate', 'Sugar', 'Hamburger', 'Lasagna', 'Meat balls', 'Cocktails', 'Vegetable oil', 'Salad', 'Samosa', 'Pumpkin soup'],
+    'Construction': ['Wood', 'Reinforced concrete', 'Bricks', 'Cement', 'Clay', 'Limestone', 'Steel beams', 'Planks', 'Windows', 'Tools', 'Construction units'],
+    'Fashion': ['Fabric', 'Leather', 'Underwear', 'Gloves', 'Dress', 'Stiletto Heel', 'Handbags', 'Sneakers', 'Luxury watch', 'Necklace'],
+    'Energy': ['Crude oil', 'Petrol', 'Diesel', 'Power', 'Ethanol', 'Methane', 'Rocket fuel'],
+    'Electronics': ['Processors', 'Electronic components', 'Batteries', 'Displays', 'Smart phones', 'Tablets', 'Laptops', 'Monitors', 'Televisions', 'High grade e-comps', 'Quadcopter', 'Robots'],
+    'Automotive': ['On-board computer', 'Electric motor', 'Luxury car interior', 'Basic interior', 'Car body', 'Combustion engine', 'Economy e-car', 'Luxury e-car', 'Economy car', 'Luxury car', 'Truck', 'Bulldozer'],
+    'Aerospace': ['Fuselage', 'Wing', 'Flight computer', 'Cockpit', 'Attitude control', 'Propellant tank', 'Solid fuel booster', 'Rocket engine', 'Heat shield', 'Ion drive', 'Jet engine'],
+    'Resources': ['Water', 'Transport', 'Minerals', 'Bauxite', 'Silicon', 'Chemicals', 'Aluminium', 'Plastic', 'Iron ore', 'Steel', 'Sand', 'Glass', 'Gold ore', 'Golden bars', 'Carbon fibers', 'Carbon composite'],
+    'Research': ['Plant research', 'Energy research', 'Mining research', 'Electronics research', 'Breeding research', 'Chemistry research', 'Software', 'Automotive research', 'Fashion research', 'Aerospace research', 'Materials research', 'Recipes'],
+    'Seasonal': ['Pumpkin', 'Easter Bunny', 'Cream egg', 'Xmas crackers', 'Xmas ornament', 'Jack o\\'lantern', 'Witch costume', 'Tree', 'Ramadan sweets', 'Chocolate icecream', 'Apple icecream']
+  };
+  const RUBRO_OPTIONS = [...Object.keys(RUBROS), VARIOS];
+
+  let contacts = loadContacts();
+  let selectedTrust = 'Medium';
+  let activeTypeFilter = 'todos';
+  let activeTrustFilter = 'todos';
+  let activeRubroFilter = 'todos';
+  let hierarchyState = {
+    open: false,
+    selectedRubros: {},
+    activeRubro: null,
+    view: 'rubros'
+  };
+
+  function loadContacts() {
+    const raw = localStorage.getItem(STORAGE_KEY) || '[]';
+    const parsed = JSON.parse(raw);
+    const normalized = parsed.map(normalizeContact);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+    return normalized;
+  }
+
+  function normalizeContact(contact) {
+    const selections = normalizeSelections(contact);
+    const rubros = selections.map(selection => selection.rubro);
+    const products = selections.flatMap(selection => selection.products);
+    const productDisplay = contact.productDisplay || contact.product || buildProductDisplay(selections);
+    const normalizedType =
+      contact.type === 'Aliado potencial' || contact.type === 'Aliado' ? 'Ally'
+      : contact.type === 'Proveedor' ? 'Supplier'
+      : contact.type === 'Cliente' ? 'Client'
+      : contact.type === 'Desconocido' ? 'Unknown'
+      : (contact.type || 'Unknown');
+    const normalizedTrust =
+      contact.trust === 'Alto' ? 'High'
+      : contact.trust === 'Medio' ? 'Medium'
+      : contact.trust === 'Bajo' ? 'Low'
+      : contact.trust === 'Neutro' ? 'Neutral'
+      : (contact.trust || 'Medium');
+    return {
+      name: contact.name || '',
+      type: normalizedType,
+      rubro: rubros.length === 1 ? rubros[0] : rubros[0] || VARIOS,
+      rubros: rubros.length ? rubros : [VARIOS],
+      selections: selections,
+      products: products,
+      product: productDisplay,
+      perception: contact.perception || '',
+      notes: contact.notes || '',
+      trust: normalizedTrust,
+      date: contact.date || new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })
+    };
+  }
+
+  function normalizeSelections(contact) {
+    if (Array.isArray(contact.selections) && contact.selections.length) {
+      return contact.selections
+        .filter(selection => selection && selection.rubro)
+        .map(selection => ({
+          rubro: selection.rubro,
+          products: Array.isArray(selection.products) ? selection.products.filter(Boolean) : []
+        }));
+    }
+
+    if (Array.isArray(contact.rubros) && contact.rubros.length) {
+      return contact.rubros
+        .filter(rubro => rubro && rubro !== VARIOS)
+        .map(rubro => ({
+          rubro: rubro,
+          products: Array.isArray(contact.productsByRubro && contact.productsByRubro[rubro])
+            ? contact.productsByRubro[rubro].filter(Boolean)
+            : []
+        }));
+    }
+
+    const rubro = contact.rubro || contact.category || inferLegacyRubro(contact.product);
+    if (!rubro || rubro === VARIOS) return [];
+    return [{
+      rubro: rubro,
+      products: Array.isArray(contact.products) ? contact.products.filter(Boolean) : []
+    }];
+  }
+
+  function inferLegacyRubro(product) {
+    if (!product || product === VARIOS) return VARIOS;
+    return VARIOS;
+  }
+
+  function buildProductDisplay(selections) {
+    if (!selections || selections.length === 0) return VARIOS;
+    return selections.map(selection => {
+      if (!selection.products || selection.products.length === 0) {
+        return selection.rubro + ' · ' + VARIOS;
+      }
+      return selection.rubro + ' · ' + selection.products.join(', ');
+    }).join(' | ');
+  }
+
+  function getHierarchySelection() {
+    const selections = Object.keys(hierarchyState.selectedRubros).map(rubro => ({
+      rubro: rubro,
+      products: [...hierarchyState.selectedRubros[rubro]]
+    }));
+    const rubros = selections.map(selection => selection.rubro);
+    return {
+      rubro: rubros.length === 1 ? rubros[0] : rubros[0] || VARIOS,
+      rubros: rubros.length ? rubros : [VARIOS],
+      products: selections.flatMap(selection => selection.products),
+      productsByRubro: Object.fromEntries(selections.map(selection => [selection.rubro, [...selection.products]])),
+      selections: selections,
+      productDisplay: buildProductDisplay(selections)
+    };
+  }
+
+  function toggleSelector(forceOpen) {
+    hierarchyState.open = typeof forceOpen === 'boolean' ? forceOpen : !hierarchyState.open;
+    document.getElementById('hierarchy-selector').classList.toggle('open', hierarchyState.open);
+    document.getElementById('selector-chevron').textContent = hierarchyState.open ? '▲' : '▼';
+    if (hierarchyState.open) {
+      renderSelectorOptions();
+      setTimeout(() => document.getElementById('selector-search').focus(), 0);
+    }
+  }
+
+  function resetHierarchySelection() {
+    hierarchyState.selectedRubros = {};
+    hierarchyState.activeRubro = null;
+    hierarchyState.view = 'rubros';
+    document.getElementById('selector-search').value = '';
+    syncSelector();
+  }
+
+  function backToRubros() {
+    hierarchyState.view = 'rubros';
+    document.getElementById('selector-search').value = '';
+    renderSelectorOptions();
+  }
+
+  function chooseRubro(rubro) {
+    if (rubro === VARIOS) {
+      resetHierarchySelection();
+      toggleSelector(false);
+      return;
+    }
+    if (!hierarchyState.selectedRubros[rubro]) {
+      hierarchyState.selectedRubros[rubro] = [];
+    }
+    hierarchyState.activeRubro = rubro;
+    hierarchyState.view = 'products';
+    document.getElementById('selector-search').value = '';
+    syncSelector();
+  }
+
+  function toggleProduct(product) {
+    if (!hierarchyState.activeRubro) return;
+    const activeProducts = hierarchyState.selectedRubros[hierarchyState.activeRubro] || [];
+    if (product === VARIOS) {
+      hierarchyState.selectedRubros[hierarchyState.activeRubro] = [];
+      syncSelector();
+      return;
+    }
+    const exists = activeProducts.includes(product);
+    hierarchyState.selectedRubros[hierarchyState.activeRubro] = exists
+      ? activeProducts.filter(p => p !== product)
+      : [...activeProducts, product];
+    syncSelector();
+  }
+
+  function removeActiveRubro() {
+    if (!hierarchyState.activeRubro) return;
+    delete hierarchyState.selectedRubros[hierarchyState.activeRubro];
+    hierarchyState.activeRubro = null;
+    hierarchyState.view = 'rubros';
+    document.getElementById('selector-search').value = '';
+    syncSelector();
+  }
+
+  function syncSelector() {
+    const selection = getHierarchySelection();
+    const titleEl = document.getElementById('selector-title');
+    const subtitleEl = document.getElementById('selector-subtitle');
+    const tagsEl = document.getElementById('selector-tags');
+    const crumbsEl = document.getElementById('selector-crumbs');
+    const backBtn = document.getElementById('back-to-rubros-btn');
+    const removeBtn = document.getElementById('remove-rubro-btn');
+    const rubroCount = selection.selections.length;
+    const productCount = selection.selections.reduce((total, item) => total + item.products.length, 0);
+
+    titleEl.textContent = selection.productDisplay;
+    subtitleEl.textContent = rubroCount === 0
+      ? 'No specific selection'
+      : rubroCount + ' sector' + (rubroCount !== 1 ? 's' : '') + ' · ' + (productCount ? productCount + ' product' + (productCount !== 1 ? 's' : '') : VARIOS);
+
+    const tags = [];
+    if (selection.selections.length === 0) {
+      tags.push('<span class="selector-tag">Various</span>');
+    } else {
+      selection.selections.forEach(item => {
+        tags.push('<span class="selector-tag">' + escapeHtml(item.rubro) + '</span>');
+        if (item.products.length) {
+          item.products.forEach(product => {
+            tags.push('<span class="selector-tag">' + escapeHtml(product) + '</span>');
+          });
+        } else {
+          tags.push('<span class="selector-tag">' + escapeHtml(item.rubro + ' · ' + VARIOS) + '</span>');
+        }
+      });
+    }
+    tagsEl.innerHTML = tags.join('');
+
+    if (!hierarchyState.activeRubro || hierarchyState.view === 'rubros') {
+      crumbsEl.innerHTML = '<span class="selector-tag">Sectors</span>';
+      backBtn.style.display = 'none';
+      removeBtn.style.display = 'none';
+    } else {
+      crumbsEl.innerHTML = '<span class="selector-tag">Sector</span><span class="selector-tag">' + escapeHtml(hierarchyState.activeRubro) + '</span><span class="selector-tag">Products</span>';
+      backBtn.style.display = 'inline-flex';
+      removeBtn.style.display = 'inline-flex';
+    }
+
+    renderSelectorOptions();
+  }
+
+  function renderSelectorOptions() {
+    const listEl = document.getElementById('selector-list');
+    const query = document.getElementById('selector-search').value.toLowerCase().trim();
+    let html = '';
+
+    if (!hierarchyState.activeRubro || hierarchyState.view === 'rubros') {
+      const rubros = RUBRO_OPTIONS.filter(rubro => !query || rubro.toLowerCase().includes(query));
+      html = rubros.length
+        ? rubros.map(rubro => {
+            const selected = !!hierarchyState.selectedRubros[rubro];
+            const countText = rubro === VARIOS ? 'General' : selected ? 'Selected' : RUBROS[rubro].length + ' products';
+            const active = hierarchyState.activeRubro === rubro || (!Object.keys(hierarchyState.selectedRubros).length && rubro === VARIOS);
+            return '<button type="button" class="selector-option' + (active ? ' active' : '') + '" onclick="chooseRubro(\'' + escapeJs(rubro) + '\')"><span>' + escapeHtml(rubro) + '</span><small>' + countText + '</small></button>';
+          }).join('')
+        : '<div class="selector-empty">No sectors match the search.</div>';
+    } else {
+      const activeProducts = hierarchyState.selectedRubros[hierarchyState.activeRubro] || [];
+      const products = [VARIOS, ...RUBROS[hierarchyState.activeRubro]].filter(product => !query || product.toLowerCase().includes(query));
+      html = products.length
+        ? products.map(product => {
+            const active = product === VARIOS ? activeProducts.length === 0 : activeProducts.includes(product);
+            const label = product === VARIOS ? 'All products in this sector' : 'Product';
+            return '<button type="button" class="selector-option' + (active ? ' active' : '') + '" onclick="toggleProduct(\'' + escapeJs(product) + '\')"><span>' + escapeHtml(product) + '</span><small>' + label + '</small></button>';
+          }).join('')
+        : '<div class="selector-empty">No products match the search.</div>';
+    }
+
+    listEl.innerHTML = html;
+  }
+
+  function selectTrust(value, el) {
+    selectedTrust = value;
+    document.querySelectorAll('.trust-opt').forEach(opt => opt.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function setTypeFilter(value, el) {
+    activeTypeFilter = value;
+    document.querySelectorAll('#type-filters .filter-btn').forEach(btn => btn.classList.remove('active'));
+    el.classList.add('active');
+    applyFilters();
+  }
+
+  function setTrustFilter(value, el) {
+    activeTrustFilter = value;
+    document.querySelectorAll('#trust-filters .filter-btn').forEach(btn => btn.classList.remove('active'));
+    el.classList.add('active');
+    applyFilters();
+  }
+
+  function setRubroFilter(value, el) {
+    activeRubroFilter = value;
+    document.querySelectorAll('#rubro-filters .filter-btn').forEach(btn => btn.classList.remove('active'));
+    el.classList.add('active');
+    applyFilters();
+  }
+
+  function getInitials(name) {
+    return name.split(/\s+/).map(word => word[0]).join('').toUpperCase().slice(0, 2);
+  }
+
+  function updateStats() {
+    document.getElementById('stat-total').textContent = contacts.length;
+    document.getElementById('stat-prov').textContent = contacts.filter(contact => contact.type === 'Supplier').length;
+    document.getElementById('stat-alto').textContent = contacts.filter(contact => contact.trust === 'High').length;
+  }
+
+  function renderRubroFilters() {
+    const rubroFilters = ['todos', ...RUBRO_OPTIONS];
+    document.getElementById('rubro-filters').innerHTML = rubroFilters.map(rubro => {
+      const label = rubro === 'todos' ? 'All sectors' : rubro;
+      const active = rubro === activeRubroFilter ? ' active' : '';
+      return '<button class="filter-btn' + active + '" onclick="setRubroFilter(\'' + escapeJs(rubro) + '\', this)">' + escapeHtml(label) + '</button>';
+    }).join('');
+  }
+
+  function applyFilters() {
+    const query = document.getElementById('search-input').value.toLowerCase().trim();
+    const filtered = contacts.filter(contact => {
+      const matchType = activeTypeFilter === 'todos' || contact.type === activeTypeFilter;
+      const matchTrust = activeTrustFilter === 'todos' || contact.trust === activeTrustFilter;
+      const rubros = Array.isArray(contact.rubros) && contact.rubros.length ? contact.rubros : [contact.rubro || VARIOS];
+      const matchRubro = activeRubroFilter === 'todos' || rubros.includes(activeRubroFilter);
+      const searchable = [
+        contact.name,
+        ...(contact.rubros || []),
+        contact.product,
+        ...(contact.products || []),
+        contact.perception,
+        contact.notes
+      ].filter(Boolean).join(' ').toLowerCase();
+      return matchType && matchTrust && matchRubro && (!query || searchable.includes(query));
+    });
+    renderContacts(filtered);
+  }
+
+  function renderContacts(list) {
+    const el = document.getElementById('contacts-list');
+    const countEl = document.getElementById('contact-count');
+    const infoEl = document.getElementById('results-info');
+
+    countEl.textContent = contacts.length + ' record' + (contacts.length !== 1 ? 's' : '');
+
+    if (contacts.length === 0) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-icon">◈</div><div class="empty-text">No contacts registered yet.</div></div>';
+      infoEl.textContent = '';
+      return;
+    }
+
+    if (list.length === 0) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-icon">◈</div><div class="empty-text">No contacts found<br>with the current filters.</div></div>';
+      infoEl.textContent = '0 results';
+      return;
+    }
+
+    infoEl.textContent = list.length < contacts.length ? list.length + ' of ' + contacts.length + ' contacts' : '';
+
+    el.innerHTML = list.map(contact => {
+      const realIndex = contacts.indexOf(contact);
+      const trustClass = contact.trust === 'High'
+        ? 'trust-alto'
+        : contact.trust === 'Medium'
+          ? 'trust-medio'
+          : contact.trust === 'Low'
+            ? 'trust-bajo'
+            : 'trust-neutro';
+      const notesHtml = contact.notes
+        ? '<div class="card-notes"><div class="card-notes-label">Notes</div>' + escapeHtml(contact.notes) + '</div>'
+        : '';
+      const meta = [contact.type, contact.product || VARIOS].filter(Boolean).join(' · ');
+      return '<div class="contact-card">' +
+        '<div class="card-top">' +
+          '<div class="avatar">' + escapeHtml(getInitials(contact.name)) + '</div>' +
+          '<div class="card-title">' +
+            '<div class="contact-name">' + escapeHtml(contact.name) + '</div>' +
+            '<div class="contact-meta">' + escapeHtml(meta) + '</div>' +
+          '</div>' +
+          '<span class="trust-badge ' + trustClass + '">' + escapeHtml(contact.trust) + '</span>' +
+        '</div>' +
+        '<hr class="card-divider"/>' +
+        '<div class="card-perception">' + escapeHtml(contact.perception) + '</div>' +
+        notesHtml +
+        '<div class="card-footer">' +
+          '<span class="card-date">Recorded: ' + escapeHtml(contact.date) + '</span>' +
+          '<button class="delete-btn" onclick="deleteContact(' + realIndex + ')">Delete</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function deleteContact(index) {
+    if (!confirm('Delete this contact?')) return;
+    contacts.splice(index, 1);
+    persistContacts();
+    updateStats();
+    applyFilters();
+  }
+
+  function saveContact() {
+    const name = document.getElementById('contact-name').value.trim();
+    const type = document.getElementById('contact-type').value;
+    const perception = document.getElementById('perception-input').value.trim();
+    const notes = document.getElementById('notes-input').value.trim();
+    const hierarchySelection = getHierarchySelection();
+
+    if (!name || !perception) {
+      alert('Complete the name and perception before saving.');
+      return;
+    }
+
+    contacts.unshift({
+      name: name,
+      type: type,
+      rubro: hierarchySelection.rubro,
+      rubros: hierarchySelection.rubros,
+      selections: hierarchySelection.selections,
+      products: hierarchySelection.products,
+      productsByRubro: hierarchySelection.productsByRubro,
+      product: hierarchySelection.productDisplay,
+      perception: perception,
+      notes: notes,
+      trust: selectedTrust,
+      date: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })
+    });
+
+    persistContacts();
+    updateStats();
+    applyFilters();
+
+    document.getElementById('contact-name').value = '';
+    document.getElementById('contact-type').value = 'Supplier';
+    document.getElementById('perception-input').value = '';
+    document.getElementById('notes-input').value = '';
+    resetHierarchySelection();
+
+    const defaultTrust = document.querySelector('.trust-opt.medio');
+    selectTrust('Medium', defaultTrust);
+
+    const msg = document.getElementById('success-msg');
+    msg.style.display = 'block';
+    setTimeout(() => { msg.style.display = 'none'; }, 2500);
+  }
+
+  function persistContacts() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
+  }
+
+  function openCompanyModal(allowCancel) {
+    const modal = document.getElementById('company-modal');
+    const input = document.getElementById('company-name-input');
+    const savedName = localStorage.getItem(COMPANY_STORAGE_KEY) || DEFAULT_COMPANY_NAME;
+    input.value = savedName === DEFAULT_COMPANY_NAME ? '' : savedName;
+    document.getElementById('company-cancel-btn').style.display = allowCancel && savedName !== DEFAULT_COMPANY_NAME ? 'inline-flex' : 'none';
+    modal.classList.add('visible');
+    setTimeout(() => input.focus(), 0);
+  }
+
+  function closeCompanyModal() {
+    const savedName = localStorage.getItem(COMPANY_STORAGE_KEY);
+    if (!savedName) return;
+    document.getElementById('company-modal').classList.remove('visible');
+  }
+
+  function saveCompanyName() {
+    const value = document.getElementById('company-name-input').value.trim();
+    if (!value) {
+      alert('Enter a company name.');
+      return;
+    }
+    localStorage.setItem(COMPANY_STORAGE_KEY, value);
+    applyCompanyName();
+    document.getElementById('company-modal').classList.remove('visible');
+  }
+
+  function applyCompanyName() {
+    const name = localStorage.getItem(COMPANY_STORAGE_KEY) || DEFAULT_COMPANY_NAME;
+    document.getElementById('company-name').textContent = name + ' — SimCompanies';
+    document.title = 'Contact Registry — ' + name;
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function escapeJs(value) {
+    return String(value).replace(/\\/g, '\\\\').replace(/'/g, '\\\'');
+  }
+
+  document.addEventListener('click', event => {
+    const selector = document.getElementById('hierarchy-selector');
+    if (hierarchyState.open && selector && !selector.contains(event.target)) {
+      toggleSelector(false);
+    }
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      toggleSelector(false);
+      closeCompanyModal();
+    }
+  });
+
+  renderRubroFilters();
+  syncSelector();
+  updateStats();
+  applyFilters();
+  applyCompanyName();
+
+  if (!localStorage.getItem(COMPANY_STORAGE_KEY)) {
+    openCompanyModal(false);
+  }
+</script>
+</body>
+</html>
