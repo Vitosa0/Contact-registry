@@ -542,6 +542,47 @@
     gap: 12px;
   }
 
+  .card-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+
+  .history-preview {
+    margin-top: 10px;
+    background: #080808;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+
+  .history-preview-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .history-preview-title {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .history-preview-date {
+    font-size: 10px;
+    color: var(--text-faint);
+  }
+
+  .history-preview-body {
+    font-size: 11px;
+    color: var(--text-soft);
+    line-height: 1.6;
+  }
+
   .card-date {
     font-size: 10px;
     color: var(--text-faint);
@@ -562,6 +603,21 @@
   }
 
   .delete-btn:hover { color: #e05252; }
+
+  .manage-btn {
+    font-size: 10px;
+    color: var(--text-dim);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    padding: 0;
+  }
+
+  .manage-btn:hover { color: var(--text); }
 
   .empty-state {
     display: flex;
@@ -640,6 +696,159 @@
     margin-top: 14px;
   }
 
+  .modal-card.modal-wide {
+    width: min(860px, 100%);
+  }
+
+  .history-layout {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 16px;
+    margin-top: 14px;
+  }
+
+  .history-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+  }
+
+  .history-block {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #080808;
+    padding: 12px;
+  }
+
+  .history-block-title {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 480px;
+    overflow: auto;
+    padding-right: 4px;
+  }
+
+  .history-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .history-item-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .history-item-title {
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .history-item-date {
+    font-size: 10px;
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+
+  .history-item-body {
+    font-size: 11px;
+    color: var(--text-soft);
+    line-height: 1.6;
+  }
+
+  .history-item-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .history-tag {
+    border: 1px solid var(--border);
+    background: #161616;
+    color: var(--text-dim);
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .history-delete {
+    background: none;
+    border: none;
+    color: var(--text-faint);
+    cursor: pointer;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .history-delete:hover { color: #e05252; }
+
+  .history-chat {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .chat-message {
+    max-width: 88%;
+    padding: 10px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .chat-message.contact {
+    align-self: flex-start;
+    background: #2d2d2d;
+    color: var(--text-soft);
+    border-top-left-radius: 4px;
+  }
+
+  .chat-message.me {
+    align-self: flex-end;
+    background: #1f6f98;
+    color: #f2f2f2;
+    border-top-right-radius: 4px;
+  }
+
+  .chat-meta {
+    display: block;
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .history-helper {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-top: 6px;
+  }
+
   .ghost-btn {
     background: transparent;
     border: 1px solid var(--border);
@@ -675,6 +884,10 @@
 
     .filter-btn {
       flex: 0 0 auto;
+    }
+
+    .history-layout {
+      grid-template-columns: 1fr;
     }
   }
 </style>
@@ -821,9 +1034,48 @@
   </div>
 </div>
 
+<div class="modal-backdrop" id="history-modal">
+  <div class="modal-card modal-wide">
+    <h2 id="history-modal-title">Historial del contacto</h2>
+    <p id="history-modal-subtitle">Pegá una conversación o cargá una interacción manual. Cada entrada queda guardada dentro del contacto y puede editarse agregando nuevas interacciones cuando quieras.</p>
+    <div class="history-layout">
+      <div class="history-column">
+        <div class="history-block">
+          <div class="history-block-title">Nueva interacción</div>
+          <div class="input-group">
+            <label>Fecha</label>
+            <input type="text" class="styled-input" id="history-date-input" placeholder="Ej: 21 days ago o 29 de mar de 2026" />
+          </div>
+          <div class="input-group" style="margin-top:10px;">
+            <label>Nota</label>
+            <textarea class="styled-input" id="history-note-input" placeholder="Escriba sus apreciaciones" style="min-height:88px;"></textarea>
+          </div>
+          <div class="input-group" style="margin-top:10px;">
+            <label>Pegar conversación</label>
+            <textarea class="styled-input" id="history-conversation-input" placeholder="Pegá el chat copiado tal como sale del juego y se separará en mensajes." style="min-height:180px;"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="ghost-btn" onclick="clearHistoryForm()">Limpiar</button>
+            <button type="button" class="save-btn" style="width:auto; padding:10px 14px;" onclick="saveHistoryEntry()">Guardar interacción</button>
+          </div>
+        </div>
+      </div>
+      <div class="history-column">
+        <div class="history-block" style="flex:1;">
+          <div class="history-block-title">Historial guardado</div>
+          <div class="history-list" id="history-list"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="ghost-btn" onclick="closeHistoryModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  const STORAGE_KEY = 'vito-contacts-v11';
-  const COMPANY_STORAGE_KEY = 'vito-company-name-v11';
+  const STORAGE_KEY = 'vito-contacts-v14';
+  const COMPANY_STORAGE_KEY = 'vito-company-name-v14';
   const DEFAULT_COMPANY_NAME = 'Nombre de la empresa';
   const VARIOS = 'Varios';
   const RUBROS = {
@@ -846,6 +1098,7 @@
   let activeTypeFilter = 'todos';
   let activeTrustFilter = 'todos';
   let activeRubroFilter = 'todos';
+  let currentHistoryContactIndex = null;
   let hierarchyState = {
     open: false,
     selectedRubros: {},
@@ -877,9 +1130,29 @@
       product: productDisplay,
       perception: contact.perception || '',
       notes: contact.notes || '',
+      history: normalizeHistory(contact),
       trust: contact.trust || 'Medio',
       date: contact.date || new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })
     };
+  }
+
+  function normalizeHistory(contact) {
+    if (!Array.isArray(contact.history)) return [];
+    return contact.history.map((entry, index) => ({
+      id: entry.id || 'h-' + Date.now() + '-' + index,
+      date: entry.date || contact.date || '',
+      summary: entry.summary || 'Interacción guardada',
+      note: entry.note || '',
+      messages: Array.isArray(entry.messages)
+        ? entry.messages
+            .filter(message => message && message.text)
+            .map(message => ({
+              speaker: message.speaker === 'me' ? 'me' : 'contact',
+              text: message.text,
+              time: message.time || ''
+            }))
+        : []
+    }));
   }
 
   function normalizeSelections(contact) {
@@ -1140,7 +1413,8 @@
         contact.product,
         ...(contact.products || []),
         contact.perception,
-        contact.notes
+        contact.notes,
+        ...(contact.history || []).map(entry => [entry.summary, entry.note, ...(entry.messages || []).map(message => message.text)].join(' '))
       ].filter(Boolean).join(' ').toLowerCase();
       return matchType && matchTrust && matchRubro && (!query || searchable.includes(query));
     });
@@ -1180,6 +1454,16 @@
       const notesHtml = contact.notes
         ? '<div class="card-notes"><div class="card-notes-label">Notas</div>' + escapeHtml(contact.notes) + '</div>'
         : '';
+      const latestHistory = Array.isArray(contact.history) && contact.history.length ? contact.history[0] : null;
+      const historyHtml = latestHistory
+        ? '<div class="history-preview">' +
+            '<div class="history-preview-head">' +
+              '<div class="history-preview-title">Última interacción</div>' +
+              '<div class="history-preview-date">' + escapeHtml(latestHistory.date || '') + '</div>' +
+            '</div>' +
+            '<div class="history-preview-body">' + escapeHtml(latestHistory.summary || '') + '</div>' +
+          '</div>'
+        : '';
       const meta = [contact.type, contact.product || VARIOS].filter(Boolean).join(' · ');
       return '<div class="contact-card">' +
         '<div class="card-top">' +
@@ -1193,9 +1477,13 @@
         '<hr class="card-divider"/>' +
         '<div class="card-perception">' + escapeHtml(contact.perception) + '</div>' +
         notesHtml +
+        historyHtml +
         '<div class="card-footer">' +
           '<span class="card-date">Registrado: ' + escapeHtml(contact.date) + '</span>' +
-          '<button class="delete-btn" onclick="deleteContact(' + realIndex + ')">Eliminar</button>' +
+          '<div class="card-actions">' +
+            '<button class="manage-btn" onclick="openHistoryModal(' + realIndex + ')">Historial' + (contact.history && contact.history.length ? ' (' + contact.history.length + ')' : '') + '</button>' +
+            '<button class="delete-btn" onclick="deleteContact(' + realIndex + ')">Eliminar</button>' +
+          '</div>' +
         '</div>' +
       '</div>';
     }).join('');
@@ -1232,6 +1520,7 @@
       product: hierarchySelection.productDisplay,
       perception: perception,
       notes: notes,
+      history: [],
       trust: selectedTrust,
       date: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })
     });
@@ -1256,6 +1545,187 @@
 
   function persistContacts() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
+  }
+
+  function openHistoryModal(index) {
+    currentHistoryContactIndex = index;
+    const contact = contacts[index];
+    document.getElementById('history-modal-title').textContent = 'Historial de ' + contact.name;
+    document.getElementById('history-modal-subtitle').textContent = 'Agregá nuevas interacciones sin tocar la ficha base del contacto. Podés pegar conversaciones completas y se convierten en burbujas legibles.';
+    clearHistoryForm();
+    renderHistoryList();
+    document.getElementById('history-modal').classList.add('visible');
+  }
+
+  function closeHistoryModal() {
+    document.getElementById('history-modal').classList.remove('visible');
+    currentHistoryContactIndex = null;
+  }
+
+  function clearHistoryForm() {
+    document.getElementById('history-date-input').value = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' });
+    document.getElementById('history-note-input').value = '';
+    document.getElementById('history-conversation-input').value = '';
+  }
+
+  function renderHistoryList() {
+    const listEl = document.getElementById('history-list');
+    if (currentHistoryContactIndex === null) {
+      listEl.innerHTML = '';
+      return;
+    }
+    const contact = contacts[currentHistoryContactIndex];
+    if (!contact.history || contact.history.length === 0) {
+      listEl.innerHTML = '<div class="selector-empty">Todavía no hay interacciones cargadas para este contacto.</div>';
+      return;
+    }
+
+    listEl.innerHTML = contact.history.map(entry => {
+      const chatHtml = entry.messages && entry.messages.length
+        ? '<div class="history-chat">' + entry.messages.map(message =>
+            '<div class="chat-message ' + message.speaker + '">' +
+              escapeHtml(message.text) +
+              (message.time ? '<span class="chat-meta">' + escapeHtml(message.speaker === 'me' ? 'Tu mensaje · ' : 'Mensaje recibido · ') + escapeHtml(message.time) + '</span>' : '') +
+            '</div>'
+          ).join('') + '</div>'
+        : '';
+      return '<div class="history-item">' +
+        '<div class="history-item-head">' +
+          '<div class="history-item-title">' + escapeHtml(entry.summary) + '</div>' +
+          '<div class="history-item-date">' + escapeHtml(entry.date) + '</div>' +
+        '</div>' +
+        (entry.note ? '<div class="history-item-body">' + escapeHtml(entry.note) + '</div>' : '') +
+        chatHtml +
+        '<div class="history-item-meta">' +
+          '<span class="history-tag">' + ((entry.messages && entry.messages.length) ? entry.messages.length + ' mensaje' + (entry.messages.length !== 1 ? 's' : '') : 'Nota manual') + '</span>' +
+          '<button class="history-delete" onclick="deleteHistoryEntry(\'' + escapeJs(entry.id) + '\')">Eliminar</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function saveHistoryEntry() {
+    if (currentHistoryContactIndex === null) return;
+    const contact = contacts[currentHistoryContactIndex];
+    const date = document.getElementById('history-date-input').value.trim() || new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' });
+    const note = document.getElementById('history-note-input').value.trim();
+    const conversationText = document.getElementById('history-conversation-input').value.trim();
+    const parsedMessages = conversationText ? parseConversationText(conversationText, contact.name) : [];
+    const summary = buildHistorySummary(parsedMessages, note);
+
+    if (!summary && !note && parsedMessages.length === 0) {
+      alert('Cargá un resumen, una nota o pegá una conversación antes de guardar.');
+      return;
+    }
+
+    contact.history = contact.history || [];
+    contact.history.unshift({
+      id: 'h-' + Date.now(),
+      date: date,
+      summary: summary || 'Interacción guardada',
+      note: note,
+      messages: parsedMessages
+    });
+
+    persistContacts();
+    applyFilters();
+    renderHistoryList();
+    clearHistoryForm();
+  }
+
+  function deleteHistoryEntry(entryId) {
+    if (currentHistoryContactIndex === null) return;
+    if (!confirm('¿Eliminar esta interacción del historial?')) return;
+    const contact = contacts[currentHistoryContactIndex];
+    contact.history = (contact.history || []).filter(entry => entry.id !== entryId);
+    persistContacts();
+    applyFilters();
+    renderHistoryList();
+  }
+
+  function buildHistorySummary(messages, note) {
+    if (messages && messages.length) {
+      const firstMessage = messages.find(message => message.speaker === 'contact') || messages[0];
+      return firstMessage.text.slice(0, 92) + (firstMessage.text.length > 92 ? '…' : '');
+    }
+    if (note) {
+      return note.slice(0, 92) + (note.length > 92 ? '…' : '');
+    }
+    return '';
+  }
+
+  function parseConversationText(text, contactName) {
+    const normalized = text.replace(/\r/g, '').trim();
+    if (!normalized) return [];
+    const lines = normalized.split('\n').map(line => line.trim()).filter(Boolean);
+    const messages = [];
+    let index = 0;
+
+    while (index < lines.length) {
+      const header = parseChatHeader(lines[index], contactName);
+      if (!header) {
+        index += 1;
+        continue;
+      }
+
+      index += 1;
+      const content = [];
+      while (index < lines.length && !parseChatHeader(lines[index], contactName)) {
+        content.push(lines[index]);
+        index += 1;
+      }
+
+      if (content.length) {
+        messages.push({
+          speaker: header.speaker,
+          time: header.time,
+          text: content.join('\n')
+        });
+      }
+    }
+
+    return messages;
+  }
+
+  function parseChatHeader(line, contactName) {
+    const normalizedLine = line.trim().replace(/\s+/g, ' ');
+    const time = extractChatTimestamp(normalizedLine);
+    if (!time) return null;
+    const prefix = normalizedLine.slice(0, normalizedLine.length - time.length).trim();
+    if (!prefix) {
+      return { speaker: 'me', time: time };
+    }
+    return { speaker: 'contact', time: time };
+  }
+
+  function extractChatTimestamp(line) {
+    const normalized = line
+      .trim()
+      .replace(/\s+/g, ' ')
+      .replace(/días/gi, 'dias');
+
+    if (/^(just now|today|yesterday|ayer)$/i.test(normalized)) {
+      return normalized.match(/^(just now|today|yesterday|ayer)$/i)[1];
+    }
+
+    const englishMatch = normalized.match(/((?:about\s+)?(\d+)\s+(minute|minutes|hour|hours|day|days|week|weeks|month|months|year|years)\s+ago)$/i);
+    if (englishMatch) {
+      const value = Number(englishMatch[2]);
+      const unit = englishMatch[3].toLowerCase();
+      if (unit.startsWith('year') && value > 5) return null;
+      return englishMatch[1];
+    }
+
+    const spanishMatch = normalized.match(/((?:hace\s+)(?:unos?\s+)?((?:\d+)|un|una)\s+(minuto|minutos|hora|horas|dia|dias|semana|semanas|mes|meses|año|años))$/i);
+    if (spanishMatch) {
+      const rawValue = spanishMatch[2].toLowerCase();
+      const value = rawValue === 'un' || rawValue === 'una' ? 1 : Number(rawValue);
+      const unit = spanishMatch[3].toLowerCase();
+      if ((unit === 'año' || unit === 'años') && value > 5) return null;
+      return spanishMatch[1];
+    }
+
+    return null;
   }
 
   function openCompanyModal(allowCancel) {
@@ -1315,6 +1785,7 @@
     if (event.key === 'Escape') {
       toggleSelector(false);
       closeCompanyModal();
+      closeHistoryModal();
     }
   });
 
